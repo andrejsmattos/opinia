@@ -1,0 +1,4 @@
+{
+  "/auth/*": "/$1",
+  "/results/:survey_id": "/responses?survey_id=:survey_id"
+}

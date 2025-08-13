@@ -1,0 +1,11 @@
+{
+  "surveys": [
+    {
+      "id": 1,
+      "title": "Satisfação com o programa Mãe Sem Culpa",
+      "description": "Queremos ouvir você!",
+      "link": "/s/abc123"
+    }
+  ],
+  "responses": []
+}

@@ -1,0 +1,236 @@
+openapi: 3.0.3
+info:
+  title: Opinia API – MVP
+  version: '0.1.0'
+servers:
+  - url: https://api.opinia.app
+paths:
+  /auth/register:
+    post:
+      summary: Registro de cliente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Cliente criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+  /auth/login:
+    post:
+      summary: Login de cliente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Token JWT emitido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+  /surveys:
+    get:
+      summary: Listar pesquisas do cliente autenticado
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Lista de pesquisas
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Survey' }
+    post:
+      summary: Criar pesquisa
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/SurveyCreate' }
+      responses:
+        '201':
+          description: Pesquisa criada
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Survey' }
+  /surveys/{id}:
+    get:
+      summary: Detalhar pesquisa
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Pesquisa
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Survey' }
+    put:
+      summary: Atualizar pesquisa
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/SurveyUpdate' }
+      responses:
+        '200':
+          description: Atualizada
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Survey' }
+    delete:
+      summary: Excluir pesquisa
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '204':
+          description: Removida
+  /responses:
+    post:
+      summary: Registrar resposta pública (sem auth de cliente)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ResponseCreate' }
+      responses:
+        '201':
+          description: Resposta registrada
+  /results/{survey_id}:
+    get:
+      summary: Agregados para dashboard (cliente autenticado)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: path
+          name: survey_id
+          required: true
+          schema: { type: string }
+        - in: query
+          name: from
+          schema: { type: string, format: date }
+        - in: query
+          name: to
+          schema: { type: string, format: date }
+      responses:
+        '200':
+          description: Métricas agregadas
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Results' }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    RegisterRequest:
+      type: object
+      required: [name, email, password]
+      properties:
+        name: { type: string }
+        email: { type: string, format: email }
+        password: { type: string, minLength: 8 }
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string }
+    AuthResponse:
+      type: object
+      properties:
+        access_token: { type: string }
+        token_type: { type: string, example: Bearer }
+    SurveyCreate:
+      type: object
+      required: [title, questions]
+      properties:
+        title: { type: string }
+        description: { type: string }
+        questions:
+          type: array
+          items: { $ref: '#/components/schemas/Question' }
+    SurveyUpdate:
+      allOf:
+        - $ref: '#/components/schemas/SurveyCreate'
+    Survey:
+      allOf:
+        - $ref: '#/components/schemas/SurveyCreate'
+        - type: object
+          properties:
+            id: { type: string }
+            client_id: { type: string }
+            link: { type: string }
+    Question:
+      type: object
+      required: [id, type, text]
+      properties:
+        id: { type: string }
+        type: { type: string, enum: [nps, csat, ces, text, choice] }
+        text: { type: string }
+        options:
+          type: array
+          items: { type: string }
+    ResponseCreate:
+      type: object
+      required: [survey_id, answers, consent]
+      properties:
+        survey_id: { type: string }
+        answers:
+          type: array
+          items:
+            type: object
+            required: [question_id, value]
+            properties:
+              question_id: { type: string }
+              value: { type: string }
+        consent: { type: boolean }
+        user_ip: { type: string }
+        user_agent: { type: string }
+    Results:
+      type: object
+      properties:
+        total_responses: { type: integer }
+        nps:
+          type: object
+          properties:
+            score: { type: integer }
+            distribution:
+              type: object
+              properties:
+                promoters: { type: integer }
+                passives: { type: integer }
+                detractors: { type: integer }
+        csat_avg: { type: number, format: float }
+        ces_avg: { type: number, format: float }
+        timeseries:
+          type: array
+          items:
+            type: object
+            properties:
+              date: { type: string, format: date }
+              responses: { type: integer }

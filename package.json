@@ -1,0 +1,28 @@
+{
+  "name": "opinia-mock-api",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "mock:api": "json-server --watch db.json --routes routes.json --port 5173",
+    "start": "react-scripts start"
+  },
+  "devDependencies": {
+    "json-server": "^0.17.4"
+  },
+  "dependencies": {
+    "react-dom": "^19.1.1",
+    "react-scripts": "^5.0.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
