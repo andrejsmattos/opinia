@@ -4,9 +4,15 @@
   "version": "0.1.0",
   "scripts": {
     "mock:api": "json-server --watch db.json --routes routes.json --port 5173",
-    "start": "react-scripts start"
+    "start": "react-scripts start",
+    "build": "babel src --out-dir dist",
+    "watch": "babel src --out-dir dist --watch"
   },
   "devDependencies": {
+    "@babel/cli": "^7.28.0",
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.27.1",
     "json-server": "^0.17.4"
   },
   "dependencies": {
