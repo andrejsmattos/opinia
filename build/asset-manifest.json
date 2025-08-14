@@ -1,0 +1,10 @@
+{
+  "files": {
+    "main.js": "/opinia/static/js/main.d29aaf35.js",
+    "index.html": "/opinia/index.html",
+    "main.d29aaf35.js.map": "/opinia/static/js/main.d29aaf35.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.d29aaf35.js"
+  ]
+}

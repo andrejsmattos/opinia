@@ -2,7 +2,7 @@
   "name": "opinia-mock-api",
   "private": true,
   "version": "0.1.0",
-  "homepage": "http://andrejsmattos.github.io/opinia",
+  "homepage": "https://andrejsmattos.github.io/opinia",
   "scripts": {
     "mock:api": "json-server --watch db.json --routes routes.json --port 5173",
     "start": "react-scripts start",
