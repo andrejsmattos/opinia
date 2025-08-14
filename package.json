@@ -2,17 +2,22 @@
   "name": "opinia-mock-api",
   "private": true,
   "version": "0.1.0",
+  "homepage": "http://andrejsmattos.github.io/opinia",
   "scripts": {
     "mock:api": "json-server --watch db.json --routes routes.json --port 5173",
     "start": "react-scripts start",
-    "build": "babel src --out-dir dist",
-    "watch": "babel src --out-dir dist --watch"
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "devDependencies": {
     "@babel/cli": "^7.28.0",
     "@babel/core": "^7.28.0",
     "@babel/preset-env": "^7.28.0",
     "@babel/preset-react": "^7.27.1",
+    "gh-pages": "^6.3.0",
     "json-server": "^0.17.4"
   },
   "dependencies": {
